@@ -1,0 +1,54 @@
+name: Adimux Kernel CI
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 3 * * 1'  # weekly Monday 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            build-essential bc bison flex libssl-dev libelf-dev dwarves \
+            clang lld llvm pkg-config python3 rsync curl ca-certificates
+
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source $HOME/.cargo/env
+          rustup default stable
+          rustup component add rust-src
+
+      - name: Update kernel to latest 6.6.y
+        run: |
+          cd kernel/linux
+          git fetch origin
+          git checkout linux-6.6.y
+          git pull
+
+      - name: Configure kernel
+        run: |
+          ./scripts/configure-kernel.sh
+
+      - name: Build kernel
+        run: |
+          ./scripts/build-kernel.sh
+
+      - name: Upload config artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-config
+          path: kernel/linux/.config
