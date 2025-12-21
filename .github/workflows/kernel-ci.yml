@@ -51,6 +51,6 @@ jobs:
         with:
           name: kernel-artifacts
           path: |
-            kernel/linux/.config
+            configs/adimux-final.config
             kernel/linux/arch/x86/boot/bzImage
 
