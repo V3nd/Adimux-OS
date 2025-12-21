@@ -46,8 +46,11 @@ jobs:
         run: |
           ./scripts/build-kernel.sh
 
-      - name: Upload config artifact
+      - name: Upload kernel artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: kernel-config
-          path: kernel/linux/.config
+          name: kernel-artifacts
+          path: |
+            kernel/linux/.config
+            kernel/linux/arch/x86/boot/bzImage
+
