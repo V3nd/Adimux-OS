@@ -32,12 +32,11 @@ jobs:
           rustup default stable
           rustup component add rust-src
 
-      - name: Update kernel to latest 6.6.y
+      - name: Checkout latest 6.6.x stable
         run: |
           cd kernel/linux
-          git fetch origin
-          git checkout linux-6.6.y
-          git pull
+          git fetch --tags
+          git checkout $(git tag -l "v6.6.*" | sort -V | tail -n 1)
 
       - name: Configure kernel
         run: |
