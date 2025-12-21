@@ -1,4 +1,4 @@
-name: Adimux Kernel CI
+name: Adimux Kernel CI v2
 
 on:
   push:
