@@ -54,3 +54,8 @@ jobs:
             configs/adimux-final.config
             kernel/linux/arch/x86/boot/bzImage
 
+      - name: LFS userspace smoke validate (tree only)
+        run: |
+          export LFS="$GITHUB_WORKSPACE/userspace/lfs"
+          ./scripts/validate-lfs.sh || true
+
